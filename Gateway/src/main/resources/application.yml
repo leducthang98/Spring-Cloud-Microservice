@@ -11,15 +11,31 @@ spring:
           uri: lb://STUDENT-SERVICE
           predicates:
             - Path=/student/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: STUDENT-SERVICE
+                fallbackuri: forward:/student-service-fallback
         - id: TEACHER-SERVICE
           uri: lb://TEACHER-SERVICE
           predicates:
             - Path=/teacher/**
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: TEACHER-SERVICE
+                fallbackuri: forward:/teacher-service-fallback
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream

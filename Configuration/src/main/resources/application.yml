@@ -1,0 +1,11 @@
+server:
+  port: 9005
+spring:
+  application:
+    name: CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          clone-on-start: true
+          uri: https://github.com/leducthang98/Spring-Cloud-Config-Server
